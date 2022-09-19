@@ -6,17 +6,11 @@ import com.deepoove.poi.config.ConfigureBuilder;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
-import com.deepoove.poi.policy.TOCRenderPolicy;
-import com.example.fileoperation.common.Reader;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
+import com.deepoove.poi.plugin.toc.TOCRenderPolicy;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.apache.commons.compress.utils.IOUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -26,6 +20,8 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * world根据模板生成内容
+ *
+ * <a href="https://blog.csdn.net/JavaSupeMan/article/details/125654484">参考文档</a>
  */
 @Data
 public class WordGenerator {
@@ -36,6 +32,7 @@ public class WordGenerator {
         // 用于生成目录
         ConfigureBuilder builder = Configure.builder();
         builder.bind("catalog", new TOCRenderPolicy());
+        builder.bind("tableData1", new LoopRowTableRenderPolicy());
         XWPFTemplate resultWord = XWPFTemplate.compile(template, builder.build()).render(data);
         // 写出为压缩文件
         zip.putNextEntry(new ZipEntry("word报告.docx"));

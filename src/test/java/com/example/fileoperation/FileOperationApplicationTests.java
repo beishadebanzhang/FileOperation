@@ -2,6 +2,8 @@ package com.example.fileoperation;
 
 import com.deepoove.poi.data.Charts;
 import com.deepoove.poi.data.TableRenderData;
+import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
+import com.example.fileoperation.word.DataEntity;
 import com.example.fileoperation.word.WordGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +26,7 @@ class FileOperationApplicationTests {
 		// 时间需要传字符串
 		data.put("startTime", "2022-09-10");
 		data.put("endTime", "2022-09-16");
-		// 表格
+		// 静态表格, java中创建row数据
 		String[] tableTitleArr = new String[] {"序号", "组件漏洞", "数量"};
 		List<String[]> tableDataList = new ArrayList<>();
 		tableDataList.add(new String[] {"1", "代码注入", "20"});
@@ -32,15 +34,20 @@ class FileOperationApplicationTests {
 		TableRenderData tableRenderData = WordGenerator.generateTableData(
 				tableTitleArr, tableDataList);
 		data.put("testTable1", tableRenderData);
+		// 动态表格 直接映射实体类 1.10.0 开始支持, 通过config绑定渲染
+		data.put("tableData1", DataEntity.getTestList(10));
 		// 折线图 纵坐标单位: 模板中设置纵坐标标题 -- 图表元素设置
 		data.put("testChart1", Charts
 				.ofMultiSeries("测试折线图01", new String[] {"2020-09-18", "2020-09-19", "2020-09-20", "2020-09-21", "2020-09-22"})
 				.addSeries("扫描数", new Integer[] { 10, 15, 7, 20, 12 })
 				.addSeries("命中数", new Integer[] { 8, 10, 7, 10, 0 })
 				.create());
-		// 条件判断
+		// 条件判断 模板中使用{{?con1}} ... {{/con1}}包含
+		data.put("con1", false);
+		data.put("content", "我是被隐藏的内容");
 
 		WordGenerator.generate(template, data, out);
 	}
+
 
 }
