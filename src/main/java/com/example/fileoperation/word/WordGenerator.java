@@ -22,6 +22,7 @@ import java.util.zip.ZipOutputStream;
  * world根据模板生成内容
  *
  * <a href="https://blog.csdn.net/JavaSupeMan/article/details/125654484">参考文档</a>
+ * <a href="http://deepoove.com/poi-tl/#_license">官网地址</a>
  */
 @Data
 public class WordGenerator {
@@ -32,6 +33,7 @@ public class WordGenerator {
         // 用于生成目录
         ConfigureBuilder builder = Configure.builder();
         builder.bind("catalog", new TOCRenderPolicy());
+        // 动态表格
         builder.bind("tableData1", new LoopRowTableRenderPolicy());
         XWPFTemplate resultWord = XWPFTemplate.compile(template, builder.build()).render(data);
         // 写出为压缩文件
