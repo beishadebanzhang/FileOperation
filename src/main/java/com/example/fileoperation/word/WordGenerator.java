@@ -3,6 +3,9 @@ package com.example.fileoperation.word;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.ConfigureBuilder;
+import com.deepoove.poi.data.Rows;
+import com.deepoove.poi.data.TableRenderData;
+import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.policy.TOCRenderPolicy;
 import com.example.fileoperation.common.Reader;
 import lombok.AllArgsConstructor;
@@ -16,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -39,5 +43,20 @@ public class WordGenerator {
         zip.flush();
         zip.closeEntry();
         IOUtils.closeQuietly(zip);
+    }
+
+    public static TableRenderData generateTableData(String[] title, List<String[]> rowList) {
+        Tables.TableBuilder table = Tables.of().center();
+        // 设置标题及样式
+        table.addRow(Rows.of(title)
+                .textColor("FFFFFF")
+                .bgColor("4472C4")
+                .textFontSize(10)
+                .center()
+                .create());
+        for (String[] rowData : rowList) {
+            table.addRow(Rows.of(rowData).create());
+        }
+        return table.create();
     }
 }
